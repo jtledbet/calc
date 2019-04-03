@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery Calculator</title>
+
+  <!-- Added link to the jQuery Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Added a link to Bootstrap-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <!-- Added a link to our external stylesheet-->
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Calculator Card -->
+      <div class="col-lg-4">
+        <div class="card">
+          <h3 class="card-header">Calculator</h3>
+
+          <div class="card-body">
+            <button id="button-1" class="btn btn-primary number" value="1"><span>1</span></button>
+            <button id="button-2" class="btn btn-primary number" value="2"><span>2</span></button>
+            <button id="button-3" class="btn btn-primary number" value="3"><span>3</span></button>
+            <button id="button-plus" class="btn btn-danger operator" value="plus"><span>+</span></button>
+            <br><br>
+            <button id="button-4" class="btn btn-primary number" value="4"><span>4</span></button>
+            <button id="button-5" class="btn btn-primary number" value="5"><span>5</span></button>
+            <button id="button-6" class="btn btn-primary number" value="6"><span>6</span></button>
+            <button id="button-minus" class="btn btn-danger operator" value="minus"><span>&minus;</span></button>
+            <br><br>
+            <button id="button-7" class="btn btn-primary number" value="7"><span>7</span></button>
+            <button id="button-8" class="btn btn-primary number" value="8"><span>8</span></button>
+            <button id="button-9" class="btn btn-primary number" value="9"><span>9</span></button>
+            <button id="button-multiply" class="btn btn-danger operator" value="times"><span>&times;</span></button>
+            <br><br>
+            <button id="button-0" class="btn btn-primary number" value="0"><span>0</span></button>
+            <button id="button-divide" class="btn btn-danger operator" value="divide"><span>&divide;</span></button>
+            <button id="button-power" class="btn btn-danger operator" value="power"><span>^</span></button>
+            <button id="button-equal" class="btn btn-success equal" value="equals"><span>=</span></button>
+            <br><br>
+            <button id="button-clear" class="btn btn-dark clear" value="clear"><span>clear</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="col-lg-6">
+        <div class="card">
+          <h3 class="card-header">Result</h3>
+          <div class="card-body">
+            <h1 id="first-number"></h1>
+            <h1 id="operator"></h1>
+            <h1 id="second-number"></h1>
+            <h1 id="equals"></h1>
+            <hr>
+            <h1 id="result"></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+
+      var haveOperator = false;
+      var theOperator = ""
+      var firstNumber = ""
+      var secondNumber = ""
+      var theAnswer = ""
+      var finished = false;
+
+      $(".btn").on("click", function () {
+
+        // what does the button say: 
+        var buttonFace = ($(this).attr('value'));
+
+        // clear vars:
+        if (buttonFace === "clear") {
+          clearCalc();
+        } else {
+
+          // is it a number?
+          isNumber = isNaN((parseInt(buttonFace)));
+          isNumber = !isNumber;
+
+
+          if (isNumber && !haveOperator) {
+            $("#first-number").append(buttonFace);
+            firstNumber = firstNumber + parseInt(buttonFace);
+            console.log(firstNumber)
+          } else if (isNumber && haveOperator) {
+            $("#second-number").append(buttonFace);
+            secondNumber = secondNumber + parseInt(buttonFace);
+            console.log(secondNumber)
+          }
+
+
+          if (!isNumber && !haveOperator) {
+            $("#operator").text(buttonFace)
+
+            if (buttonFace != "equals") {
+              console.log(haveOperator + " the op: " + theOperator)
+              theOperator = buttonFace;
+
+              // we have the operator, so toggle boolean:
+              haveOperator = !haveOperator;
+              console.log(haveOperator + " the op: " + theOperator)
+            }
+          }
+
+          // contingency for hitting equals too soon:
+          if (buttonFace === "equals" && !haveOperator) {
+            // $("#equals").text("equals")
+            $("#result").text(firstNumber.toString());
+            // final calculation:
+          } else if (buttonFace === "equals" && haveOperator) {
+            console.log(haveOperator + " the op: " + theOperator)
+            $("#equals").text("equals")
+
+            firstNumber = parseInt(firstNumber);
+            secondNumber = parseInt(secondNumber);
+
+            switch (theOperator) {
+              case ("plus"):
+                console.log("plus case")
+                if (finished) theAnswer = theAnswer + secondNumber;
+                else theAnswer = firstNumber + secondNumber;
+                console.log(parseInt(theAnswer))
+                break;
+              case ("minus"):
+                console.log("minus case")
+                if (finished) theAnswer = theAnswer - secondNumber;
+                else theAnswer = firstNumber - secondNumber;
+                break;
+              case ("times"):
+                console.log("times case")
+                if (finished) theAnswer = theAnswer * secondNumber;
+                else theAnswer = firstNumber * secondNumber;
+                break;
+              case ("divide"):
+                console.log("divide case")
+                if (finished) theAnswer = theAnswer / secondNumber;
+                else theAnswer = firstNumber / secondNumber;
+                break;
+              case ("power"):
+                console.log("power case")
+                if (finished) theAnswer = Math.pow(theAnswer, secondNumber);
+                else theAnswer = Math.pow(firstNumber, secondNumber);
+                break;
+            }
+
+            // print answer:
+            $("#result").text(theAnswer.toString());
+            finished = true;
+
+          }
+
+        }
+
+      });
+
+      function clearCalc() {
+        haveOperator = false;
+        theOperator = ""
+        firstNumber = ""
+        secondNumber = ""
+        theAnswer = ""
+        finished = false;
+        
+
+        $("#first-number").text('');
+        $("#operator").text('');
+        $("#second-number").text('');
+        $("#equals").text('');
+        $("#result").text('');
+
+      }
+
+    });
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+/* Select all spans that are immediate children of buttons */
+button > span {
+    font-size: 2.5rem;
+}
+
+.btn {
+    border: 2px groove gray; 
+    background: gray;
+    /* font-style: oblique; */
+    border-bottom-color: black;
+}
+
+.jumbotron {
+    background: gray;
+}
+
+.container {
+    padding: 2%;
+}
+
+body {
+    background: black;
+}
